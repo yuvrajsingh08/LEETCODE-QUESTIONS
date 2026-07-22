@@ -24,10 +24,30 @@ public:
         }
         return dp[0][0];
     }
+    int solveUsingTabSO(vector<vector<int>>& grid) {
+        vector<int> next(grid[0].size()+1,10000000);
+        // next[grid[0].size()-1] = grid[grid.size()-1][grid[0].size()-1]; why not working as n-1 & m-1 also in lloop
+        int m = grid.size();
+        int n = grid[0].size();
+        for(int i=m-1; i>=0; i--) {
+            vector<int> curr(grid[0].size()+1,10000000);
+            for(int j=n-1; j>=0; j--) {
+                 if (i == m - 1 && j == n - 1) {
+                curr[j] = grid[i][j];
+                continue;
+            }
+                long long down = grid[i][j]+ curr[j+1];
+                long long up = grid[i][j]+ next[j];
+                curr[j] = min(up,down);
+            }
+            next = curr;
+        }
+        return next[0];
+    }
     int minPathSum(vector<vector<int>>& grid) {
         int sum = 0;
         // vector<vector<int>> dp(grid.size()+1,vector<int>(grid[0].size()+1,-1));
-        return solveUsingTab(grid);
+        return solveUsingTabSO(grid);
         // return solveUsingRecursion(grid, 0,0,dp);
     }
 };
